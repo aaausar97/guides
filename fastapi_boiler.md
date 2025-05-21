@@ -1,4 +1,4 @@
-# FastAPI + Tortoise ORM + Docker + Aerich: Production Boilerplate Guide
+# FastAPI + Tortoise ORM + Docker + Aerich Boilerplate Guide
 
 ## 1. Project Structure
 
@@ -85,6 +85,7 @@ project_root/
 ## 6. Aerich Migrations
 
 - **Aerich config:** In `app/aerich_config.py`, define `TORTOISE_ORM` with all models and DB connection.
+- **aerich.ini:** Should point to your config and migrations folder.
 - **Initialize migrations (first time only):**
   ```sh
   docker compose -f environment/docker-compose.yml exec app poetry run aerich init-db
@@ -118,6 +119,6 @@ project_root/
 
 ---
 
-**Result:**
+**Result:**  
 You now have a robust, modular, and production-ready FastAPI project with authentication, migrations, Dockerized workflows, and a clean structure—ready for rapid development and deployment!
 
