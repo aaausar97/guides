@@ -122,3 +122,62 @@ project_root/
 **Result:**  
 You now have a robust, modular, and production-ready FastAPI project with authentication, migrations, Dockerized workflows, and a clean structure—ready for rapid development and deployment!
 
+## 9. Example Dockerfiles
+
+### FastAPI + Poetry Dockerfile
+
+```Dockerfile
+FROM python:3.13-slim
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+WORKDIR /code
+
+RUN apt-get update && apt-get install -y build-essential libpq-dev && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --upgrade pip && pip install poetry
+
+COPY pyproject.toml poetry.lock ./
+RUN poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi
+
+COPY . .
+
+EXPOSE 8000
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+### Test Runner Dockerfile (via docker-compose.test.yml)
+
+You can use the same Dockerfile as above, but override the command in your `docker-compose.test.yml`:
+
+```yaml
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: environment/Dockerfile
+    command: ["pytest"]
+    # ...other config...
+```
+
+---
+
+## 10. Major Dependencies & Documentation
+
+- [FastAPI](https://fastapi.tiangolo.com/) — Modern, fast (high-performance) web framework for building APIs with Python 3.7+.
+- [Tortoise ORM](https://tortoise-orm.readthedocs.io/en/latest/) — Easy-to-use asyncio ORM inspired by Django.
+- [Aerich](https://tortoise-orm.readthedocs.io/en/latest/migration.html) — Database migrations tool for Tortoise ORM.
+- [Uvicorn](https://www.uvicorn.org/) — Lightning-fast ASGI server for Python web apps.
+- [Poetry](https://python-poetry.org/docs/) — Python dependency management and packaging.
+- [Passlib](https://passlib.readthedocs.io/en/stable/) — Secure password hashing library.
+- [python-jose](https://python-jose.readthedocs.io/en/latest/) — JOSE implementation for JWT authentication.
+- [pytest](https://docs.pytest.org/en/stable/) — Simple, powerful testing framework for Python.
+- [httpx](https://www.python-httpx.org/) — Next generation HTTP client for Python (used for testing APIs).
+- [asgi-lifespan](https://github.com/florimondmanca/asgi-lifespan) — ASGI Lifespan protocol utilities (for testing FastAPI startup/shutdown).
+- [Docker](https://docs.docker.com/) — Containerization platform.
+- [Docker Compose](https://docs.docker.com/compose/) — Tool for defining and running multi-container Docker applications.
+- [PostgreSQL](https://www.postgresql.org/docs/) — Advanced open source relational database.
+- [pgAdmin](https://www.pgadmin.org/docs/) — PostgreSQL database management tool (optional, for local dev).
+
